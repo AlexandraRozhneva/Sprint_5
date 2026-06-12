@@ -5,7 +5,7 @@ def generate_email():
     """Генерирует email в формате имя_фамилия_номер_когорты_3_цифры@yandex.ru"""
     name = "Alexandra"
     surname = "Rozhneva"
-    cohort = "48666"
+    cohort = "48"
     random_digits = ''.join(random.choices(string.digits, k=3))
     
     email = f"{name}_{surname}_{cohort}_{random_digits}@yandex.ru"
