@@ -2,6 +2,7 @@ import pytest
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
 from locators import MainPageLocators
 from helpers import wait_and_click, get_active_tab_text
 import logging
@@ -10,24 +11,25 @@ logger = logging.getLogger(__name__)
 
 class TestConstructor:
     
-    def test_switch_to_buns_section_alternative(self, driver):
-        """Альтернативный тест перехода к разделу 'Булки' - клик по родительскому элементу"""
+    def test_switch_to_buns_section_with_actions(self, driver):
+        """Тест с использованием ActionChains и смещением"""
         driver.get("https://stellarburgers.education-services.ru/")
     
-    # Находим родительский элемент таба
-        parent_tab = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//div[contains(@class, 'tab_tab__1SPyG')]//span[text()='Булки']/parent::div"))
+    # Находим элемент
+        element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located(MainPageLocators.BUNS_SECTION)
     )
     
-    # Прокручиваем к родительскому элементу
-        driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", parent_tab)
+    # Прокручиваем к элементу
+        driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)
     
-    # Кликаем по родительскому элементу
-        parent_tab.click()
+    # Используем ActionChains с небольшим смещением
+        actions = ActionChains(driver)
+        actions.move_to_element(element).click().perform()
     
-    # Проверяем, что таб стал активным
-        active_tab = driver.find_element(By.XPATH, "//div[contains(@class, 'tab_tab_type_current__2BEPc')]")
-        assert "Булки" in active_tab.text
+    # Проверяем результат
+        active_tab_text = get_active_tab_text(driver)
+        assert active_tab_text == "Булки", f"Активный таб '{active_tab_text}', ожидался 'Булки'"
     
         logger.info("Тест перехода к разделу 'Булки' пройден")
     
