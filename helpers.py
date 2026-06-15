@@ -61,3 +61,42 @@ def get_active_tab_text(driver):
         return text_element.text
     except:
         return None
+    
+def close_overlays(driver):
+    """Закрытие возможных перекрывающих элементов"""
+    try:
+        # Проверяем наличие кнопки закрытия модального окна
+        close_buttons = driver.find_elements(By.XPATH, "//button[contains(@class, 'close') or contains(@class, 'CloseButton')]")
+        for button in close_buttons:
+            if button.is_displayed():
+                button.click()
+                WebDriverWait(driver, 3).until(
+                    EC.invisibility_of_element_located((By.XPATH, "//div[contains(@class, 'modal')]"))
+                )
+    except:
+        pass
+
+def wait_and_click_safe(driver, locator, timeout=15):
+    """Максимально безопасный клик с обработкой всех возможных проблем"""
+    # Закрываем перекрывающие элементы
+    close_overlays(driver)
+    
+    # Ждем элемент
+    element = WebDriverWait(driver, timeout).until(
+        EC.presence_of_element_located(locator)
+    )
+    
+    # Прокручиваем
+    driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)
+    
+    # Небольшая пауза для завершения анимации
+    time.sleep(0.5)
+    
+    # Пробуем разные способы клика
+    try:
+        element.click()
+    except ElementClickInterceptedException:
+        # Пробуем кликнуть через JavaScript как крайний случай
+        driver.execute_script("arguments[0].click();", element)
+    
+    return element
