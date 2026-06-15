@@ -15,21 +15,21 @@ class TestConstructor:
         driver.get("https://stellarburgers.education-services.ru/")
     
     # Находим родительский элемент таба
-    parent_tab = WebDriverWait(driver, 10).until(
+        parent_tab = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, "//div[contains(@class, 'tab_tab__1SPyG')]//span[text()='Булки']/parent::div"))
     )
     
     # Прокручиваем к родительскому элементу
-    driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", parent_tab)
+        driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", parent_tab)
     
     # Кликаем по родительскому элементу
-    parent_tab.click()
+        parent_tab.click()
     
     # Проверяем, что таб стал активным
-    active_tab = driver.find_element(By.XPATH, "//div[contains(@class, 'tab_tab_type_current__2BEPc')]")
-    assert "Булки" in active_tab.text
+        active_tab = driver.find_element(By.XPATH, "//div[contains(@class, 'tab_tab_type_current__2BEPc')]")
+        assert "Булки" in active_tab.text
     
-    logger.info("Тест перехода к разделу 'Булки' пройден")
+        logger.info("Тест перехода к разделу 'Булки' пройден")
     
     def test_switch_to_sauces_section(self, driver):
         """Тест перехода к разделу 'Соусы'"""
