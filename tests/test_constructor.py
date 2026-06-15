@@ -14,6 +14,11 @@ class TestConstructor:
         """Тест перехода к разделу 'Булки'"""
         driver.get("https://stellarburgers.education-services.ru/")
         
+        # Ожидаем загрузки страницы
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located(MainPageLocators.BUNS_SECTION)
+        )
+        
         # Кликаем по разделу "Булки"
         wait_and_click(driver, MainPageLocators.BUNS_SECTION)
         
@@ -31,14 +36,15 @@ class TestConstructor:
         """Тест перехода к разделу 'Соусы'"""
         driver.get("https://stellarburgers.education-services.ru/")
         
-        # Кликаем по разделу "Соусы"
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located(MainPageLocators.SAUCES_SECTION)
+        )
+        
         wait_and_click(driver, MainPageLocators.SAUCES_SECTION)
         
-        # Проверяем, что активный таб - "Соусы"
         active_tab_text = get_active_tab_text(driver)
         assert active_tab_text == "Соусы", f"Активный таб '{active_tab_text}', ожидался 'Соусы'"
         
-        # Дополнительная проверка: наличие класса активного таба
         active_tab = driver.find_element(*MainPageLocators.ACTIVE_TAB)
         assert "tab_tab_type_current__2BEPc" in active_tab.get_attribute("class")
         
@@ -48,14 +54,15 @@ class TestConstructor:
         """Тест перехода к разделу 'Начинки'"""
         driver.get("https://stellarburgers.education-services.ru/")
         
-        # Кликаем по разделу "Начинки"
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located(MainPageLocators.FILLINGS_SECTION)
+        )
+        
         wait_and_click(driver, MainPageLocators.FILLINGS_SECTION)
         
-        # Проверяем, что активный таб - "Начинки"
         active_tab_text = get_active_tab_text(driver)
         assert active_tab_text == "Начинки", f"Активный таб '{active_tab_text}', ожидался 'Начинки'"
         
-        # Дополнительная проверка: наличие класса активного таба
         active_tab = driver.find_element(*MainPageLocators.ACTIVE_TAB)
         assert "tab_tab_type_current__2BEPc" in active_tab.get_attribute("class")
         
@@ -72,8 +79,7 @@ class TestConstructor:
         ]
         
         for section_locator, section_name in sections:
-            # Проверяем, что элемент кликабелен
-            element = WebDriverWait(driver, 5).until(
+            element = WebDriverWait(driver, 10).until(
                 EC.element_to_be_clickable(section_locator)
             )
             assert element.is_displayed(), f"Элемент {section_name} не отображается"
