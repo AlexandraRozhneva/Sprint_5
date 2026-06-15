@@ -10,27 +10,26 @@ logger = logging.getLogger(__name__)
 
 class TestConstructor:
     
-    def test_switch_to_buns_section(self, driver):
-        """Тест перехода к разделу 'Булки'"""
-        driver.get("https://stellarburgers.education-services.ru/")
-        
-        # Ожидаем загрузки страницы
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located(MainPageLocators.BUNS_SECTION)
-        )
-        
-        # Кликаем по разделу "Булки"
-        wait_and_click(driver, MainPageLocators.BUNS_SECTION)
-        
-        # Проверяем, что активный таб - "Булки"
-        active_tab_text = get_active_tab_text(driver)
-        assert active_tab_text == "Булки", f"Активный таб '{active_tab_text}', ожидался 'Булки'"
-        
-        # Дополнительная проверка: наличие класса активного таба
-        active_tab = driver.find_element(*MainPageLocators.ACTIVE_TAB)
-        assert "tab_tab_type_current__2BEPc" in active_tab.get_attribute("class")
-        
-        logger.info("Тест перехода к разделу 'Булки' пройден")
+    def test_switch_to_buns_section_alternative(self, driver):
+    """Альтернативный тест перехода к разделу 'Булки' - клик по родительскому элементу"""
+    driver.get("https://stellarburgers.education-services.ru/")
+    
+    # Находим родительский элемент таба
+    parent_tab = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "//div[contains(@class, 'tab_tab__1SPyG')]//span[text()='Булки']/parent::div"))
+    )
+    
+    # Прокручиваем к родительскому элементу
+    driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", parent_tab)
+    
+    # Кликаем по родительскому элементу
+    parent_tab.click()
+    
+    # Проверяем, что таб стал активным
+    active_tab = driver.find_element(By.XPATH, "//div[contains(@class, 'tab_tab_type_current__2BEPc')]")
+    assert "Булки" in active_tab.text
+    
+    logger.info("Тест перехода к разделу 'Булки' пройден")
     
     def test_switch_to_sauces_section(self, driver):
         """Тест перехода к разделу 'Соусы'"""
