@@ -11,12 +11,12 @@ logger = logging.getLogger(__name__)
 class TestConstructor:
     
     def test_switch_to_buns_section_alternative(self, driver):
-    """Альтернативный тест перехода к разделу 'Булки' - клик по родительскому элементу"""
-    driver.get("https://stellarburgers.education-services.ru/")
+        """Альтернативный тест перехода к разделу 'Булки' - клик по родительскому элементу"""
+        driver.get("https://stellarburgers.education-services.ru/")
     
     # Находим родительский элемент таба
     parent_tab = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "//div[contains(@class, 'tab_tab__1SPyG')]//span[text()='Булки']/parent::div"))
+            EC.element_to_be_clickable((By.XPATH, "//div[contains(@class, 'tab_tab__1SPyG')]//span[text()='Булки']/parent::div"))
     )
     
     # Прокручиваем к родительскому элементу
