@@ -1,4 +1,6 @@
 import pytest
+import sys
+import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
@@ -6,6 +8,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from locators import AuthPageLocators, MainPageLocators
 from generators import generate_email, generate_password, generate_name
 import logging
+
+# Добавляем корневую директорию в путь (если еще не добавлена)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
